@@ -1,5 +1,6 @@
 package com.iessanalberto.dam2.juegosdemanos.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,11 +10,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,10 +38,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.iessanalberto.dam2.juegosdemanos.R
 import com.iessanalberto.dam2.juegosdemanos.models.Player
+import com.iessanalberto.dam2.juegosdemanos.navigation.AppScreens
 import kotlin.random.Random
 
 val player: Player = Player(
@@ -38,16 +55,85 @@ val enemy: Player = Player(
 )
 var resultado  : String = ""
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BodyContent( modifier: Modifier) {
+fun PiedraPapelTijeraScreen(navController: NavController) {
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Piedra, papel o tijera") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary
+
+                )
+            )
+
+        },
+
+        bottomBar = {
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.primary,
+                actions = {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = "Atrás"
+                        )
+                    }
+                    IconButton(onClick = {
+                        player.puntuacion = 0
+                        enemy.puntuacion = 0
+                    }) {
+                        Icon(Icons.Filled.Refresh, contentDescription = "Reiniciar")
+                    }
+                    Text(text = "Reiniciar Partida")
+                }
+
+            )
+        },
+        modifier = Modifier.fillMaxSize()
+
+
+
+    ){
+            paddingValues -> BodyContentPiedraPapelTijera(modifier = Modifier.padding(paddingValues))
+    }
+
+
+
+
+}
+@Composable
+fun BodyContentPiedraPapelTijera( modifier: Modifier) {
     var isSelected by rememberSaveable { mutableStateOf(false)}
     var opcionJugador by rememberSaveable { mutableStateOf(0) }
-
+    val context = LocalContext.current
 
     Column (modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
+        Row {
+        Text(text = "PUNTUACIÓN")
+        }
+        Row{
+            Text(text="Player: ")
+            Text(
+                text = player.puntuacion.toString(),
+                modifier = Modifier.width(200.dp),
+
+            )
+            Text(text="Enemy: ")
+            Text(
+                text = enemy.puntuacion.toString(),
+                modifier = Modifier.width(200.dp),
+
+                )
+        }
+        Spacer(modifier = Modifier.height(50.dp))
         Row {
             Text(text = "Selecciona una de las 3 opciones")
         }
@@ -101,8 +187,8 @@ fun BodyContent( modifier: Modifier) {
         }
         Spacer(modifier = Modifier.height(50.dp))
         Button(onClick = {
-            jugarPartida(opcionJugador)
-            System.out.println(player.puntuacion.toString() + enemy.puntuacion.toString())
+
+            Toast.makeText(context, jugarPartida(opcionJugador), Toast.LENGTH_SHORT).show()
         }
         ){
             Text(text = "Jugar")

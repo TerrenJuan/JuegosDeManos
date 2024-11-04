@@ -1,3 +1,4 @@
+
 package com.iessanalberto.dam2.juegosdemanos.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +27,7 @@ fun MainScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {/*name?.let {Text(text =it)}*/},
+                title = { Text(text = "Juegos de Manos") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary
@@ -68,3 +69,7 @@ fun MainScreen(navController: NavController) {
 
 }
 
+fun BodyContent(modifier: Modifier){
+
+
+}
